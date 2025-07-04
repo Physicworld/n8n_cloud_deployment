@@ -10,20 +10,6 @@ services:
       - ./traefik/traefik.yml:/traefik.yml:ro
       - ./traefik/acme.json:/letsencrypt/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command:
-      # --- HABILITAR API Y DASHBOARD ---
-      - "--api"
-      - "--api.dashboard=true"
-      # --- PROVEEDORES Y PUNTOS DE ENTRADA ---
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      # --- CONFIGURACIÓN DE CERTIFICADOS LET'S ENCRYPT ---
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
 
     labels:
       - "traefik.enable=true"
@@ -33,7 +19,6 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.service=api@internal"
 #      - "--traefik.http.services.traefik.loadbalancer.server.port=8080"
-
 
       # --- MIDDLEWARE DE AUTENTICACIÓN ---
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$hCX69OcEPIGkBwR97tT4GOEEIQ6Y7so3FmWD.GKWWRD4IbCEOEVKi"

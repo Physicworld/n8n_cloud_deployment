@@ -1,3 +1,5 @@
+# Archivo: traefik/traefik.yml
+
 entryPoints:
   web:
     address: ":80"
@@ -8,6 +10,10 @@ entryPoints:
           scheme: https
   websecure:
     address: ":443"
+
+# --- AÑADE ESTE BLOQUE PARA HABILITAR EL API Y DASHBOARD ---
+api:
+  dashboard: true
 
 certificatesResolvers:
   letsencrypt:
