@@ -11,6 +11,7 @@ services:
       - ./traefik/acme.json:/letsencrypt/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command:
+      - "--api"
       - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
