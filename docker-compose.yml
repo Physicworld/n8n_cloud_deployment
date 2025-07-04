@@ -26,7 +26,7 @@ services:
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$10$$3QK9KXC6aRpWzlNJFyFFMOxcOhxkUBKPFpQcpGqhZhZgLTcLJbG0C"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$2y$05$hCX69OcEPIGkBwR97tT4GOEEIQ6Y7so3FmWD.GKWWRD4IbCEOEVKi"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
   postgres:
