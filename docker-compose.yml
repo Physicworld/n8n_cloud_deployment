@@ -11,24 +11,37 @@ services:
       - ./traefik/acme.json:/letsencrypt/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     command:
+      # --- HABILITAR API Y DASHBOARD ---
       - "--api"
       - "--api.dashboard=true"
+      # --- PROVEEDORES Y PUNTOS DE ENTRADA ---
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # --- CONFIGURACIÓN DE CERTIFICADOS LET'S ENCRYPT ---
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     labels:
       - "traefik.enable=true"
+      # --- ROUTER PARA EL DASHBOARD DE TRAEFIK ---
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.traefik.service=api@internal" # <-- LÍNEA AÑADIDA
-      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik.service=api@internal"
+
+      # --- MIDDLEWARE DE AUTENTICACIÓN ---
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$hCX69OcEPIGkBwR97tT4GOEEIQ6Y7so3FmWD.GKWWRD4IbCEOEVKi"
+
+      # --- MIDDLEWARE DE REDIRECCIÓN ---
+      - "traefik.http.middlewares.redirect-to-dashboard.redirectregex.regex=^https://([^/]+)$$"
+      - "traefik.http.middlewares.redirect-to-dashboard.redirectregex.replacement=https://$${1}/dashboard/"
+
+      # --- APLICAR AMBOS MIDDLEWARES ---
+      - "traefik.http.routers.traefik.middlewares=redirect-to-dashboard,traefik-auth"
+
   postgres:
     image: postgres:15-alpine
     container_name: n8n_postgres
