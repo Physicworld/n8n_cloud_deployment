@@ -6,23 +6,31 @@ if [ $# -eq 0 ]; then
     echo "❌ Error: Debes especificar el archivo de backup"
     echo "📝 Uso: bash scripts/restore.sh nombre_del_backup.sql"
     echo "📁 Backups disponibles:"
-    ls -la ~/backups/*.sql 2>/dev/null || echo "   No hay backups disponibles"
+    ls -la $HOME/backups/*.sql 2>/dev/null || echo "   No hay backups disponibles"
     exit 1
 fi
 
 BACKUP_FILE="$1"
-BACKUP_PATH="~/backups/$BACKUP_FILE"
+
+# Verificar si es ruta absoluta o relativa
+if [[ "$BACKUP_FILE" = /* ]]; then
+    # Es ruta absoluta
+    BACKUP_PATH="$BACKUP_FILE"
+else
+    # Es solo nombre de archivo, agregar ruta de backups
+    BACKUP_PATH="$HOME/backups/$BACKUP_FILE"
+fi
 
 # Verificar que el archivo existe
 if [ ! -f "$BACKUP_PATH" ]; then
     echo "❌ Error: No se encontró el archivo $BACKUP_PATH"
     echo "📁 Backups disponibles:"
-    ls -la ~/backups/*.sql 2>/dev/null || echo "   No hay backups disponibles"
+    ls -la $HOME/backups/*.sql 2>/dev/null || echo "   No hay backups disponibles"
     exit 1
 fi
 
 echo "🔄 Iniciando restauración de N8N..."
-echo "📄 Archivo: $BACKUP_FILE"
+echo "📄 Archivo: $BACKUP_PATH"
 
 # Confirmar restauración
 echo "⚠️  ADVERTENCIA: Esta operación sobrescribirá la base de datos actual"
