@@ -25,10 +25,9 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.service=api@internal" # <-- LÍNEA AÑADIDA
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$2y$$05$$hCX69OcEPIGkBwR97tT4GOEEIQ6Y7so3FmWD.GKWWRD4IbCEOEVKi"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
-
   postgres:
     image: postgres:15-alpine
     container_name: n8n_postgres
