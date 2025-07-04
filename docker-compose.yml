@@ -31,8 +31,8 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST}`)"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-#      - "traefik.http.routers.traefik.service=api@internal"
-      - "--traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.http.routers.traefik.service=api@internal"
+#      - "--traefik.http.services.traefik.loadbalancer.server.port=8080"
 
 
       # --- MIDDLEWARE DE AUTENTICACIÓN ---
